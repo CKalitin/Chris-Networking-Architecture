@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Montserrat:500");
+
+    body {
+        background: rgb(54, 58, 64);
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        height: 100%;
+    }
+
+    .header {
+        position: sticky;
+        top: 0;
+        background: rgb(46, 50, 56);
+        padding: 20px 10px;
+        font-weight: bold;
+    }
+
+    .header-right {
+        float: right;
+        padding-top: 8px;
+    }
+
+    #title {
+        padding-left: 28px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 28px;
+        color: rgb(255, 80, 80);
+    }
+
+    #made-by {
+        padding-right: 36px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 16px;
+        color: rgb(255, 80, 80);
+    }
+
+    .sidenav {
+        width: 260px;
+        position: fixed;
+        z-index: 1;
+        top: 100px;
+        left: 25px;
+        background: rgb(46, 50, 56);
+        overflow-x: hidden;
+        padding: 8px 0;
+    }
+
+    .sidenav a {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(255, 80, 80);
+        padding: 12px 0px 12px 30px;
+        font-size: 22px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .sidenav a:hover {
+        color: rgb(220, 50, 50);
+    }
+
+    .content {
+        z-index: 1;
+        margin: 25px 25px 5px 310px;
+    }
+
+    .section {
+        padding: 1px 15px;
+        margin-bottom: 25px;
+        background: rgb(46, 50, 56);
+        word-break: break-word;
+    }
+
+    h2 {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(255, 80, 80);
+        font-size: 26px;
+    }
+
+    h3 {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(255, 80, 80);
+        font-size: 18px;
+    }
+
+    h4 {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(255, 80, 80);
+        font-size: 15px;
+    }
+
+    p {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(255, 100, 100);
+        font-size: 15px;
+    }
+
+    code {
+        color: rgb(255, 100, 100);
+        background: rgb(56, 60, 67);
+        border-radius: 5px;
+        padding: 1px 1px;
+    }
+</style>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELL Documentation</title>
+</head>
+
+<body>
+    <div class="header">
+        <a id="title">Chris Networking Architecture Documentation</a>
+        <div class="header-right">
+            <a id="made-by">Christopher Kalitin</a>
+        </div>
+    </div>
+
+    <main>
+        <div class="sidenav">
+            <a href="#overview">Overview</a>
+            <a href="#installation">Installation</a>
+            <a href="#setup">Setup</a>
+            <a href="#client-objects">Client Objects</a>
+            <a href="#client-server-data">Client / Server Data</a>
+            <a href="#input-manager">Input Manager</a>
+            <a href="#other">Other</a>
+        </div>
+        <section class="content">
+            <div class="section" id="overview">
+                <h2>Overview</h2>
+                <p>
+                    The Chris Networking Architecture or CNA is a networking architecture designed specifically for
+                    unity games. It was originally written following the Tom Weiland Unity Networking tutorial with many
+                    more features added on top of it.
+                    <br><br>
+                    This can be used to make any kind of multiplayer game with a server to client architecture. The
+                    server to client architecture means that there are two unity projects, one for the server and
+                    another for the client.
+                </p>
+            </div>
+
+            <div class="section" id="installation">
+                <h2>Initialization</h2>
+                <p>
+                    Installation is simple, you can install it the same way you install any Unity Package. Follow this
+                    list of steps for both the server and client.
+                </p>
+                <h4>Step 1</h4>
+                <p>
+                    Create Unity projects for the Server and the Client.
+                    Now, download the server and client packages by going to
+                    https://github.com/CKalitin/Chris-Networking-Architecture and clicking the big green “Code” button
+                    and then click “Download Zip”.
+                </p>
+                <h4>Step 2</h4>
+                <p>
+                    In your Unity project go to Window > Package Manager.
+                    Then, click the + icon in the top left and select “Add package from disk…”.
+                    Now navigate to where you downloaded the Github project and navigate through the folders to the
+                    appropriate package for your Unity project, either server or client.
+                    Then select package.json and click open.
+                </p>
+                <h4>Step 3</h4>
+                <p>
+                    Wait for Unity to install the package, and now you’re finished.
+                    Now repeat this for these steps for the other unity project using the opposite package, if you used
+                    client, use server and vice versa.
+                </p>
+            </div>
+
+            <div class="section" id="setup">
+                <h2>Setup</h2>
+                <h3>Client</h3>
+                <p>
+                    The client only needs 3 things to work, the Network Manager, Client, and Thread Manager scripts.
+                    Simply put these on game objects in your scene.
+                    <br><br>
+                    Then initialize the values of these.
+                    <br>
+                    For Network Manager, assign the camera variable and default username, we will cover prefabs in the
+                    Client Objects section.
+                    <br>
+                    For Client, set the default ip if you want (it is by default local host), then set the port of the
+                    server (by default 26950).
+                    <br>
+                    There is nothing to initialize on Thread Manager.
+                </p>
+
+                <h3>Server</h3>
+                <p>The server only needs Network Manager and Thread Manager in the Unity scene to work. Simply put these
+                    scripts on a Game Object and it will work.</p>
+            </div>
+
+            <div class="section" id="client-objects">
+                <h2>Client Objects</h2>
+                <h3>Overview</h3>
+                <p>
+                    The Client Object is an object that is spawned on the server and sent to the clients.
+                    <br>
+                    This is done by attaching the Client Object script to a Gameobject in the server and specifying the
+                    prefab to use in its place on the client.
+                </p>
+                <h3>How to Use</h3>
+                <h4>Step 1</h4>
+                <p>
+                    Create a Game Object in the Server Unity project and attach the Client Object script to it.
+                </p>
+                <h4>Step 2</h4>
+                <p>
+                    In the Client Unity project create a gameobject that you will use as the prefab for the id of the
+                    Client Object on the server.
+                    <br>
+                    Drag the object you just created into the project window to make it a prefab and delete the original
+                    in the unity scene.
+                </p>
+                <h4>Step 3</h4>
+                <p>
+                    Put the prefab you created into the list named “Client Object Prefabs”.
+                    Then, set the “Prefab Index” variable on the object you created in the server to the index of the
+                    Client Object you just put in the “Client Object Prefabs” list.
+                </p>
+            </div>
+
+            <div class="section" id="client-server-data">
+                <h2>Client / Server Data</h2>
+                <h3>Overview</h3>
+                <p>
+                    Client / Server Data Packets are how regular data is sent between the server and clients or vice
+                    versa.
+                    <br><br>
+                    Client Data Packets are sent from the server to the clients.<br>
+                    Server Data Packets are sent from any client to the server.
+                    <br><br>
+                    A Client or Server Data Packet is created in the Network Manager and every Server or Client Data
+                    Packet has an id which is the it’s index in the list of server or client data packets.<br>
+                    With a packet created in the Network Manager and it’s id Server or Client Data Packets can be sent
+                    in code and received in a callback which you can specify.
+
+                </p>
+                <h3>How to Use</h3>
+                <h4>Step 1</h4>
+                <p>
+                    Add a new element in the list of Client Data Structs in Network Manager on the Client. This does not
+                    need to be done on the Server because Client Data Structs are only used to read data but this can
+                    also be done on the server for ease of use in the future.<br>
+                    Set its name and description if you’re the kind of programmer that writes comments and documentation
+                    : )
+                    <br><br>
+                    Add elements to the list of variable types, these are the types of variables that will be sent.<br>
+                    For example, if you want to send the max health and current health of the player in that order, you
+                    would have 2 elements and for both of them you would select isFloat.<br>
+                    Please note that you can only set one variable type per element, and it does use the variable type
+                    that is highest in the list of variables types (eg. int is above bool, so if both were checked, int
+                    would be used)
+                </p>
+                <h4>Step 2</h4>
+                <p>
+                    To send a Client Data Packet, you need to first create a Client Data Object and set it’s id (This is
+                    it’s index in the list of Client Data Packets) and the variables in it (These are stored as
+                    objects).<br>
+                    This is all done server-side.
+                </p>
+
+                <p>
+                    This creates a new Client Data Object. <br>
+                    The parameter which is currently 0 is the id of the Client Data Object, this is the index of the
+                    Client Data Object in the list in Network Manager.<br>
+                    <code>ClientDataObject clientDataObject = new ClientDataObject(0);</code>
+                </p>
+
+                <p>
+                    There is an optional additional parameter in the Constructor of ClientDataObject which adds a list
+                    of type object to the list of variables in it.<br>
+                    <code>ClientDataObject clientDataObject = new ClientDataObject(0, new List<.object>() {10.0f, 5.0f});</code>
+                </p>
+
+
+                <p>
+                    To add variables to a ClientDataObject simply use the Write function. <br>
+                    The write function takes the same variables as the ClientDataStruct in Network Manager. Because
+                    variables are stored as structs you can use this function with any variables which are also in the
+                    ClientDataStruct. <br>
+                    <code>clientDataObject.Write(“Hello there, General Kenobi.”);</code>
+                </p>
+
+                <p>
+                    To send the ClientDataObject call NetworkManager.SendServerDataObject. The first parameter is the
+                    client you are sending this server data object to, set it to -1 to send to all clients. The second
+                    is the ClientDataObject itself. <br>
+                    <code>NetworkManager.SendClientDataObject(-1, clientDataObject);</code>
+                </p>
+
+                <p>
+                    When sending a ServerDataPacket you do not need the first variable which is the client to send to as
+                    it is only sending it to the server. <br>
+                    Also, a Client or Server Data Object can be created in-line in the Send function. <br>
+                    <code>NetworkManager.SendServerDataObject(new ServerDataObject(0, new List<.object>() { 420.69 }));</code>
+                </p>
+
+                <h4>Step 3</h4>
+                <p>
+                    When a Client Data Packet is received on the client all callback functions set for a Data Packet of
+                    that id are called.
+                    <br><br>
+                    A Data Packet callback must be created with a Server or Client Data Object parameter and no other
+                    parameters. They can be either private or public. <br>
+                    <code>
+                    Private void Callback(ClientDataObject) {<br>
+                    &emsp;&emsp;&emsp;&emsp;Debug.Log($"CallbackPublic Id: {_clientDataObject.Id}");<br>
+                    &emsp;&emsp;&emsp;&emsp;for (int i = 0; i < _clientDataObject.Vars.Count; i++) {<br>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Debug.Log("CallbackPublic: " + _clientDataObject.Vars[i]);<br>
+                    &emsp;&emsp;&emsp;&emsp;}<br>
+                    }<br>
+                    </code>
+                    Yea, I put those brackets there, come at me bro.
+                    <br><br>
+                    A callback will only be called if you add it to the list of callbacks in the Network Manager. <br>
+                    Simply call the AddClientDataCallback function and pass the callback function you created as a
+                    parameter as well as the id of the ClientDataObject which you want to call the callback when it is
+                    received.<br>
+                    <code>NetworkManager.instance.AddClientDataCallback(new NetworkManager.ClientDataCallback(Callback), 0);</code>
+                </p>
+            </div>
+
+            <div class="section" id="input-manager">
+                <h2>Input Manager</h2>
+                <h3>Overview</h3>
+                <p>
+                    The Chris Networking Architecture Input Manager works about the same as the built in Unity Input
+                    Manager.
+                    <br>
+                    It has onKeyDown, onKeyUp, and onKey functions and the mousePos on the client’s monitor. Mouse
+                    buttons are also treated as keys so Input.GetKeyDown(KeyCode.Mouse1) is possible.
+                </p>
+
+                <h3>Examples</h3>
+                <h4>onKeyDown</h4>
+                <p><code>
+                    if (Server.clients[1].Input.OnKeyDown(KeyCode.Alpha1)) {<br>
+                    &emsp;&emsp;&emsp;&emsp;Debug.Log("Key 1 has been pressed”);<br>
+                    }
+                </code></p>
+
+                <h4>onKeyUp</h4>
+                <p><code>
+                    if (Server.clients[1].Input.OnKeyDown((Keycode)59)) { <br>
+                    &emsp;&emsp;&emsp;&emsp;Debug.Log(“Semi-colon key was released”);<br>
+                    }<br>
+                    </code>
+                    Keycode numbers can be found by right clicking KeyCode > Peek Definition
+                </p>
+
+                <h4>Key Pressed</h4>
+                <p><code>
+                if (Server.clients[1].Input.OnKey(KeyCode.Mouse0)) {<br>
+                &emsp;&emsp;&emsp;&emsp;Debug.Log("Left mouse button is being held");<br>
+                }
+                </code></p>
+
+                <h4>Mouse Position</h4>
+                </p><code>
+                Vector2 mousePos = Server.clients[1].Input.MousePosition;
+                </code></p>
+            </div>
+
+            <div class="section" id="other">
+                <h2>Other</h2>
+                <h3>Clients</h3>
+                <p>
+                    On the server there is a list of clients. Each Client has 2 public variables, it’s id and whether it
+                    is connected or not.
+                    <br><br>
+                    There is no client 0, instead the list of clients starts at 1, blame Tom Weiland’s networking
+                    tutorial.
+                </p>
+            </div>
+        </section>
+
+        <p style="padding-left: 8px; padding-bottom: 5px; font-size: 18px; ">2021</p>
+    </main>
+</body>
+
+</html>

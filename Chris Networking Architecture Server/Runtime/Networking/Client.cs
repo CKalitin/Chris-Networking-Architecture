@@ -10,12 +10,11 @@ public class Client {
     public UDP udp;
 
     public int id;
-    public int dataId;
 
     public bool connected = false;
 
     private InputManager inputManager;
-    public InputManager InputManager { get { return inputManager; } }
+    public InputManager Input { get { return inputManager; } }
 
     public Client(int _clientID) {
         id = _clientID;

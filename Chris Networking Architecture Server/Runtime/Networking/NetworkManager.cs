@@ -3,12 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
+    #region Variables
+
+    // Everything here except Data Packets is hidden in Inspector because of the static keyword
     public static NetworkManager instance;
 
     public static List<ClientObject> clientObjects = new List<ClientObject>();
 
-    public delegate void ServerDataCallback(ServerDataPacket _serverDataPacket); // Create a delegate for callback functions
+    public delegate void ServerDataCallback(ServerDataObject _serverDataObject); // Create a delegate for callback functions
     public static List<KeyValuePair<int, ServerDataCallback>> serverDataCallbacks = new List<KeyValuePair<int, ServerDataCallback>>(); // 2D List of ClientDataCallbacks, each ClientDataCallback is in one list inside another, so it has 2 indexes
+
+    #region Data Packets
+
+    [Header("Data Packets")]
+    public List<ServerDataStruct> serverDataStructs;
+    public List<ClientDataStruct> clientDataStructs;
+
+    [System.Serializable]
+    public struct ServerDataStruct {
+        public string name;
+        public string description;
+        public List<DataType> variables;
+    };
+
+    [System.Serializable]
+    public struct ClientDataStruct {
+        public string name;
+        public string description;
+        public List<DataType> variables;
+    };
+
+    [System.Serializable]
+    public struct DataType {
+        public string name;
+        [Space]
+        public bool isByte;
+        public bool isByteArray;
+        public bool isShort;
+        public bool isInt;
+        public bool isLong;
+        public bool isFloat;
+        public bool isBool;
+        public bool isString;
+        public bool isVector2;
+        public bool isVector3;
+        public bool isQuaternion;
+    }
+
+    #endregion
+
+    #endregion
 
     #region Core
 
@@ -36,13 +80,13 @@ public class NetworkManager : MonoBehaviour {
         // Loop through all clients to get their InputManagers
         for (int i = 1; i <= Server.clients.Count; i++) {
             // Loop through all Input Managers keys to reset
-            for (int x = 0; x < Server.clients[i].InputManager.LocalKeyCodesToReset.Count; x++) {
-                InputManager inputManager = Server.clients[i].InputManager; // Get InputManager of client[i]
+            for (int x = 0; x < Server.clients[i].Input.LocalKeyCodesToReset.Count; x++) {
+                InputManager inputManager = Server.clients[i].Input; // Get InputManager of client[i]
 
                 bool pressed = inputManager.LocalKeyCodes[inputManager.LocalKeyCodesToReset[x]].pressed; // Get pressed variable of current LocalKeyCode in client
                 inputManager.SetLocalKeyCode(inputManager.LocalKeyCodesToReset[x], false, false, pressed); // Reset Vars of current LocalKeyCode
             }
-            Server.clients[i].InputManager.LocalKeyCodesToReset.Clear();
+            Server.clients[i].Input.LocalKeyCodesToReset.Clear();
         }
     }
 
@@ -80,19 +124,19 @@ public class NetworkManager : MonoBehaviour {
         ServerSend.ClientObjectUpdate(_toClient, _objectId, _pos, _rot, _scale);
     }
 
-    public static void ClientDataPacketSend(int _toClient, ClientDataPacket _clientDataPacket) {
-        ServerSend.ClientDataPacket(_toClient, _clientDataPacket);
+    public static void SendClientDataObject(int _toClient, ClientDataObject _clientDataObject) {
+        ServerSend.ClientDataObject(_toClient, _clientDataObject);
     }
 
     #endregion
 
     #region Handling Data
 
-    public void ServerDataPacket(ServerDataPacket _serverDataPacket) {
+    public void ServerDataObject(ServerDataObject _serverDataObject) {
         // Loop through dictionary of serverDataCallbacks
         foreach (var serverDataCallback in serverDataCallbacks) {
-            if (serverDataCallback.Key == (int)_serverDataPacket.Vars[0]) { // If ServerDataPacket id of callback is equal to CDP of this scriptable object
-                serverDataCallback.Value(_serverDataPacket); // Run callback and pass ServerDataPacket as a parameter
+            if (serverDataCallback.Key == _serverDataObject.Id) { // If ServerDataObject id of callback is equal to CDP of this scriptable object
+                serverDataCallback.Value(_serverDataObject); // Run callback and pass ServerDataObject as a parameter
             }
         }
     }
@@ -101,8 +145,8 @@ public class NetworkManager : MonoBehaviour {
 
     #region Other
 
-    public void AddServerDataCallback(ServerDataCallback _callback, int _serverDataPacketId) {
-        serverDataCallbacks.Add(new KeyValuePair<int, ServerDataCallback>(_serverDataPacketId, _callback)); // Add new serverDataCallback delegate to list of callbacks at proper position with id specified
+    public void AddServerDataCallback(ServerDataCallback _callback, int _serverDataObjectId) {
+        serverDataCallbacks.Add(new KeyValuePair<int, ServerDataCallback>(_serverDataObjectId, _callback)); // Add new serverDataCallback delegate to list of callbacks at proper position with id specified
     }
 
     #endregion

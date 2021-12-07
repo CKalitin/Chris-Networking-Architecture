@@ -2,24 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientDataPacket {
+public class ClientDataObject {
     // List of ids for client data packets (this is for receiving them the same way regular packets work, see Packet.cs)
-    public enum ClientDataPacketTypes {
+    public enum ClientDataObjectTypes {
         test = 1, // Int
     }
 
-    //Constructor to set id of ClientDataPacket
-    public ClientDataPacket(int _id) {
-        vars.Add(_id); // Add _id object to list of vars
+    //Constructor to set id of ClientDataObject
+    public ClientDataObject(int _id) {
+        id = _id; // Add _id object to list of vars
+    }
+
+    //Constructor to set id of ClientDataObject with list of objects
+    public ClientDataObject(int _id, List<object> _objects) {
+        id = _id; // Add _id object to list of vars
+
+        Write(_objects); // Write list of objects to vars
     }
 
     // This is a list of objects so any element can be any data type
+    private int id;
+    public int Id { get { return id; } set { id = value; } }
+
+    // This is a list of objects so any element can be any data type
     List<object> vars = new List<object>();
-    public List<object> Vars { get { return vars; } set { vars = value; } } 
+    public List<object> Vars { get { return vars; } set { vars = value; } }
 
     #region Write
 
     // Write functions, these create new PacketDataTypes and put them in the list of vars to send
+
+    public void Write(List<object> _objects) {
+        // Loop through list of objects
+        for (int i = 0; i < _objects.Count; i++) {
+            vars.Add(_objects[i]); // add object at index i to list of vars
+        }
+    }
 
     public void Write(byte _byte) {
         vars.Add(_byte); // Add paramater to list of object vars

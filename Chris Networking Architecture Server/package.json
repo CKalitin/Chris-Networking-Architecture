@@ -1,6 +1,6 @@
 {
   "name": "com.ckalitin.chrisnetworkingarchitectureserver",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "displayName": "Chris Networking Architecture Server",
   "description": "This is a server to client networking architecture for Unity Games written by Christopher Kalitin.",
   "unity": "2020.3",

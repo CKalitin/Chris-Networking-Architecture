@@ -7,6 +7,9 @@ using System.Linq;
 using UnityEngine;
 
 public class Server {
+
+    #region Variables
+
     public static int MaxClients { get; private set; }
 
     public static int Port { get; private set; }
@@ -16,12 +19,12 @@ public class Server {
     public delegate void PacketHandler(int _fromClient, Packet _packet);
     public static Dictionary<int, PacketHandler> packetHandlers;
 
-    // Dictionary of delegates (reference to function) to clientDataPacketHandlers
-    public delegate void ServerDataPacketHandler(int _fromClient, Packet _packet);
-    public static Dictionary<int, ServerDataPacketHandler> serverDataPacketHandlers;
-
     private static TcpListener tcpListener;
     private static UdpClient udpListener;
+
+    #endregion
+
+    #region Core
 
     public static void Start(int _maxClients, int _port) {
         MaxClients = _maxClients;
@@ -39,6 +42,10 @@ public class Server {
 
         Debug.Log($"Server started on {Port}.");
     }
+
+    #endregion
+
+    #region TCP & UDP
 
     private static void TCPConnectCallback(IAsyncResult _result) {
         TcpClient _client = tcpListener.EndAcceptTcpClient(_result);
@@ -96,6 +103,10 @@ public class Server {
         }
     }
 
+    #endregion
+
+    #region Functions
+
     private static void InitializeServerData() {
         for (int i = 1; i <= MaxClients; i++) {
             clients.Add(i, new Client(i));
@@ -105,19 +116,15 @@ public class Server {
                 { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
                 { (int)ClientPackets.tcpInput, ServerHandle.TCPInput },
                 { (int)ClientPackets.udpInput, ServerHandle.UDPInput },
-                { (int)ClientPackets.serverData, ServerHandle.ServerDataPacket },
+                { (int)ClientPackets.serverData, ServerHandle.ServerDataObject },
             };
         Debug.Log("Initialized packets.");
-
-        // Initialize ClientDataPacketHandlers with delegates (search it up, they're cool)
-        serverDataPacketHandlers = new Dictionary<int, ServerDataPacketHandler>() {
-                { (int)ServerDataPacket.ServerDataPacketTypes.test, ServerHandle.ReadServerDataPacketTest },
-            };
-        Debug.Log("Initialized Server Data Packet Handlers.");
     }
 
     public static void Stop() {
         tcpListener.Stop();
         udpListener.Close();
     }
+
+    #endregion
 }
