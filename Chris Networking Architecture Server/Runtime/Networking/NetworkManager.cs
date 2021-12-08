@@ -107,6 +107,8 @@ public class NetworkManager : MonoBehaviour {
         clientObjects.Add(clientObject);
 
         ServerSend.ClientObjectNew(_toClient, clientObject.prefabIndex);
+
+        ServerSend.ClientObjectUpdate(_toClient, clientObject.objectId, clientObject.transform.position, clientObject.transform.rotation, clientObject.transform.localScale);
     }
 
     public static void ClientObjectDelete(int _toClient, int _objectId) {
@@ -147,6 +149,15 @@ public class NetworkManager : MonoBehaviour {
 
     public void AddServerDataCallback(ServerDataCallback _callback, int _serverDataObjectId) {
         serverDataCallbacks.Add(new KeyValuePair<int, ServerDataCallback>(_serverDataObjectId, _callback)); // Add new serverDataCallback delegate to list of callbacks at proper position with id specified
+    }
+
+    // This is called when a client sends the welcome received packet
+    public void SendClientObjectsOnClient(int _clientId) {
+        for (int i = 0; i < clientObjects.Count; i++) {
+            ServerSend.ClientObjectNew(_clientId, clientObjects[i].prefabIndex); // Create new client object on client
+            ServerSend.ClientObjectUpdate(_clientId, clientObjects[i].objectId, clientObjects[i].transform.position, clientObjects[i].transform.rotation, clientObjects[i].transform.localScale); // Set position, etc. for new client object on client
+
+        }
     }
 
     #endregion

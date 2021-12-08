@@ -16,9 +16,6 @@ public class NetworkManager : MonoBehaviour {
     public static List<KeyValuePair<int, ClientDataCallback>> clientDataCallbacks = new List<KeyValuePair<int, ClientDataCallback>>(); // 2D List of ClientDataCallbacks, each ClientDataCallback is in one list inside another, so it has 2 indexes
 
     [Header("Other")]
-    [SerializeField] private string username;
-    public string Username { get { return username; } set { username = value; } }
-
     [SerializeField] private Camera cam;
     public Camera Cam { get { return cam; } set { cam = value; } }
 

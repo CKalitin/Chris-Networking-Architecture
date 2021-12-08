@@ -66,7 +66,7 @@ public class InputManager {
         mousePos = _mousePos;
     }
 
-    public bool OnKeyDown(KeyCode _keyCode) {
+    public bool GetKeyDown(KeyCode _keyCode) {
         LocalKeyCode value;
 
         // See if the is a localKeyCode for key _keyCode
@@ -78,7 +78,7 @@ public class InputManager {
         return false;
     }
 
-    public bool OnKeyUp(KeyCode _keyCode) {
+    public bool GetKeyUp(KeyCode _keyCode) {
         LocalKeyCode value;
 
         // See if the is a localKeyCode for key _keyCode
@@ -90,7 +90,7 @@ public class InputManager {
         return false;
     }      
     
-    public bool OnKey(KeyCode _keyCode) {
+    public bool GetKey(KeyCode _keyCode) {
         LocalKeyCode value;
 
         // See if the is a localKeyCode for key _keyCode

@@ -7,7 +7,7 @@ public class ClientObject : MonoBehaviour {
     [Space]
     public int objectId;
 
-    Vector2 previousPos;
+    Vector3 previousPos;
     Quaternion previousRot;
     Vector3 previousScale;
 
@@ -16,7 +16,7 @@ public class ClientObject : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if ((Vector2)transform.position != previousPos || transform.rotation != previousRot || transform.localScale != previousScale) {
+        if (transform.position != previousPos || transform.rotation != previousRot || transform.localScale != previousScale) {
             NetworkManager.ClientObjectUpdate(-1, objectId, transform.position, transform.rotation, transform.localScale);
         }
 

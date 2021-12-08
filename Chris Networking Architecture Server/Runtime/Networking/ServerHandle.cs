@@ -6,12 +6,13 @@ public class ServerHandle {
 
     public static void WelcomeReceived(int _fromClient, Packet _packet) {
         int _clientIdCheck = _packet.ReadInt();
-        string _username = _packet.ReadString();
 
         Debug.Log($"{Server.clients[_fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now Player {_fromClient}.");
         if (_fromClient != _clientIdCheck) {
-            Debug.Log($"Player \"{_username}\" (ID: {_fromClient}) has assumed the wrong client ID ({_clientIdCheck})!");
+            Debug.Log($"ID: {_fromClient}) has assumed the wrong client ID ({_clientIdCheck}.");
         }
+
+        NetworkManager.instance.SendClientObjectsOnClient(_fromClient);
     }
 
     public static void TCPInput(int _fromClient, Packet _packet) {
@@ -34,7 +35,7 @@ public class ServerHandle {
         }
 
         // If client that sent the data is still connected
-        if (Server.clients[_fromClient].connected) {
+        if (Server.clients[_fromClient].isConnected) {
             Server.clients[_fromClient].Input.SetTCPInput(keysDown, keysUp);
         }
     }
@@ -43,7 +44,7 @@ public class ServerHandle {
         Vector2 _mousePos = _packet.ReadVector2(); // Read mouse pos (dependent on client monitor)
 
         // If client that sent the data is still connected
-        if (Server.clients[_fromClient].connected) {
+        if (Server.clients[_fromClient].isConnected) {
             Server.clients[_fromClient].Input.SetUDPInput(_mousePos);
         }
     }

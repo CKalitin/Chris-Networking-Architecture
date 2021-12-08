@@ -11,7 +11,7 @@ public class Client {
 
     public int id;
 
-    public bool connected = false;
+    public bool isConnected = false;
 
     private InputManager inputManager;
     public InputManager Input { get { return inputManager; } }
@@ -52,7 +52,7 @@ public class Client {
 
             ServerSend.Welcome(id, "Welcome to the server!");
 
-            client.connected = true;
+            client.isConnected = true;
         }
 
         public void SendData(Packet _packet) {
@@ -169,7 +169,7 @@ public class Client {
     public void Disconnect() {
         Debug.Log($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
 
-        connected = false;
+        isConnected = false;
 
         ThreadManager.ExecuteOnMainThread(() => {
             /*if (player != null) {

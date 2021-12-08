@@ -33,7 +33,6 @@ public class ClientSend : MonoBehaviour {
     public static void WelcomeReceived() {
         using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived)) { // Using creates a new objects then destroys it
             _packet.Write(Client.instance.myId);
-            _packet.Write(NetworkManager.instance.Username);
 
             SendTCPData(_packet);
         }

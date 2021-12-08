@@ -23,7 +23,7 @@ public class ClientHandle : MonoBehaviour {
 
     public static void ClientObjectUpdate(Packet _packet) {
         int _objectId = _packet.ReadInt();
-        Vector2 _pos = _packet.ReadVector3();
+        Vector3 _pos = _packet.ReadVector3();
         Quaternion _rot = _packet.ReadQuaternion();
         Vector3 _scale = _packet.ReadVector3();
 
