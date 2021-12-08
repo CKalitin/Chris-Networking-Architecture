@@ -382,6 +382,21 @@
                     There is no client 0, instead the list of clients starts at 1, blame Tom Weiland’s networking
                     tutorial.
                 </p>
+                <h3>Connecting</h3>
+                <p>
+                    Just having everything setup does not mean you can connect to the server. You need to call the
+                    connect functions in the Client script.<br>
+                    <code>Client.instance.ConnectToServer();</code><br>
+                    <br>
+                    If you already have the IP and Port set in the Unity Editor this will work, but if you want to set
+                    it you can use this code.<br>
+                    Please note that you must use the SetIP functions instead of setting the ip without the function or
+                    the UDP listener will not be properly initialized.<br>
+                    <code>
+                        Client.instance.port = 26950;
+                        Client.instance.SetIP("127.0.0.1");
+                    </code>
+                </p>
             </div>
         </section>
 
