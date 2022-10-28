@@ -13,6 +13,8 @@ public class ServerHandle {
         }
 
         NetworkManager.instance.SendClientObjectsOnClient(_fromClient);
+
+        NetworkManager.instance.CallClientConnectedCallbacks(_fromClient);
     }
 
     public static void TCPInput(int _fromClient, Packet _packet) {
@@ -52,44 +54,42 @@ public class ServerHandle {
     public static void ServerDataObject(int _fromClient, Packet _packet) {
         int serverDataObjectId = _packet.ReadInt(); // Read id of this clientDataObject
         // Use a try catch statement to throw an error if code is not run successfully
-        try {
-            ServerDataObject serverDataObject = new ServerDataObject(serverDataObjectId); // Create new ServerDataObject
-            serverDataObject.FromClient = _fromClient; // Set fromClient in ServerDataObject to client that sent this packet
-            // Loop through variables in serverDataStruct at index of _serverDataObjectIndex
-            for (int i = 0; i < NetworkManager.instance.serverDataStructs[serverDataObjectId].variables.Count; i++) {
-                // Get current data type in loop
-                NetworkManager.DataType dataType = NetworkManager.instance.serverDataStructs[serverDataObjectId].variables[i];
 
-                // Loop through dataTypes list in the serverDataStructs that's set by the user in Network Manager
-                // If you find the type that the variable is, read it and add it to the list of variables
-                if (dataType.isByte) {
-                    serverDataObject.Write(_packet.ReadByte());
-                } else if (dataType.isByteArray) {
-                    serverDataObject.Write(_packet.ReadBytes(_packet.ReadInt()));
-                } else if (dataType.isShort) {
-                    serverDataObject.Write(_packet.ReadInt());
-                } else if (dataType.isInt) {
-                    serverDataObject.Write(_packet.ReadInt());
-                } else if (dataType.isLong) {
-                    serverDataObject.Write(_packet.ReadLong());
-                } else if (dataType.isFloat) {
-                    serverDataObject.Write(_packet.ReadFloat());
-                } else if (dataType.isBool) {
-                    serverDataObject.Write(_packet.ReadBool());
-                } else if (dataType.isString) {
-                    serverDataObject.Write(_packet.ReadString());
-                } else if (dataType.isVector2) {
-                    serverDataObject.Write(_packet.ReadVector2());
-                } else if (dataType.isVector3) {
-                    serverDataObject.Write(_packet.ReadVector3());
-                } else if (dataType.isQuaternion) {
-                    serverDataObject.Write(_packet.ReadQuaternion());
-                }
+        ServerDataObject serverDataObject = new ServerDataObject(serverDataObjectId); // Create new ServerDataObject
+        serverDataObject.FromClient = _fromClient; // Set fromClient in ServerDataObject to client that sent this packet
+        // Loop through variables in serverDataStruct at index of _serverDataObjectIndex
+        for (int i = 0; i < NetworkManager.instance.serverDataStructs[serverDataObjectId].variables.Count; i++) {
+            // Get current data type in loop
+            NetworkManager.DataType dataType = NetworkManager.instance.serverDataStructs[serverDataObjectId].variables[i];
+
+            // Loop through dataTypes list in the serverDataStructs that's set by the user in Network Manager
+            // If you find the type that the variable is, read it and add it to the list of variables
+            if (dataType.isByte) {
+                serverDataObject.Write(_packet.ReadByte());
+            } else if (dataType.isByteArray) {
+                serverDataObject.Write(_packet.ReadBytes(_packet.ReadInt()));
+            } else if (dataType.isShort) {
+                serverDataObject.Write(_packet.ReadInt());
+            } else if (dataType.isInt) {
+                serverDataObject.Write(_packet.ReadInt());
+            } else if (dataType.isLong) {
+                serverDataObject.Write(_packet.ReadLong());
+            } else if (dataType.isFloat) {
+                serverDataObject.Write(_packet.ReadFloat());
+            } else if (dataType.isBool) {
+                serverDataObject.Write(_packet.ReadBool());
+            } else if (dataType.isString) {
+                serverDataObject.Write(_packet.ReadString());
+            } else if (dataType.isVector2) {
+                serverDataObject.Write(_packet.ReadVector2());
+            } else if (dataType.isVector3) {
+                serverDataObject.Write(_packet.ReadVector3());
+            } else if (dataType.isQuaternion) {
+                serverDataObject.Write(_packet.ReadQuaternion());
             }
-            NetworkManager.instance.ServerDataObject(serverDataObject);
-        } catch {
-            Debug.LogError($"Could not read Server Data Packet of id: {serverDataObjectId}");
         }
+
+        NetworkManager.instance.ServerDataObject(serverDataObject);
     }
 
     #endregion

@@ -6,33 +6,33 @@ using UnityEngine;
 public class ClientSend : MonoBehaviour {
     public static bool singlePlayer = false;
 
-    private static void SendTCPData(Packet _packet) {
-        _packet.WriteLength();
-        if (singlePlayer) {
-
-        } else {
-            if (Client.instance.isConnected && ClientHandle.welcomeReceived) {
-                Client.instance.tcp.SendData(_packet);
-            }
-        }
-    }
-
-    private static void SendUDPData(Packet _packet) {
-        _packet.WriteLength();
-        if (singlePlayer) {
-
-        } else {
-            if (Client.instance.isConnected && ClientHandle.welcomeReceived) {
-                Client.instance.udp.SendData(_packet);
-            }
-        }
-    }
+"    private static void SendTCPData(Packet _packet) {" +
+"\n        _packet.WriteLength();" +
+"\n        if (singlePlayer) {" +
+"\n" +
+"\n        } else {" +
+"\n            if (Client.instance.isConnected && ClientHandle.welcomeReceived) {" +
+"\n                Client.instance.tcp.SendData(_packet);" +
+"\n            }" +
+"\n        }" +
+"\n    }" +
+"\n" +
+"\n    private static void SendUDPData(Packet _packet) {" +
+"\n        _packet.WriteLength();" +
+"\n        if (singlePlayer) {" +
+"\n" +
+"\n        } else {" +
+"\n            if (Client.instance.isConnected && ClientHandle.welcomeReceived) {" +
+"\n                Client.instance.udp.SendData(_packet);" +
+"\n            }" +
+"\n        }" +
+"\n    }";
 
     #region Packets
 
     public static void WelcomeReceived() {
         using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived)) { // Using creates a new objects then destroys it
-            _packet.Write(Client.instance.myId);
+            _packet.Write(Client.instance.id);
 
             SendTCPData(_packet);
         }

@@ -6,7 +6,6 @@ using System.Net.Sockets;
 using UnityEngine;
 
 public class Client : MonoBehaviour {
-
     #region Variables
 
     public static Client instance;
@@ -14,11 +13,14 @@ public class Client : MonoBehaviour {
 
     public string ip = "127.0.0.1";
     public int port = 26950;
-    [HideInInspector] public int myId = 0;
+    [HideInInspector] public int id = 0;
     [HideInInspector] public TCP tcp;
     [HideInInspector] public UDP udp;
 
     [HideInInspector] public bool isConnected = false;
+
+    [Space]
+    public int maxPlayers;
 
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
@@ -38,6 +40,7 @@ public class Client : MonoBehaviour {
 
     private void Start() {
         tcp = new TCP();
+        udp = new UDP();
     }
 
     private void OnApplicationQuit() {
@@ -86,6 +89,7 @@ public class Client : MonoBehaviour {
                 }
             } catch (Exception _ex) {
                 Debug.Log($"Error sending data to server via TCP: {_ex}");
+                Disconnect();
             }
         }
 
@@ -93,7 +97,6 @@ public class Client : MonoBehaviour {
             try {
                 int _byteLength = stream.EndRead(_result);
                 if (_byteLength <= 0) {
-                    Debug.Log("here");
                     instance.Disconnect();
                     return;
                 }
@@ -176,12 +179,13 @@ public class Client : MonoBehaviour {
 
         public void SendData(Packet _packet) {
             try {
-                _packet.InsertInt(instance.myId);
+                _packet.InsertInt(instance.id);
                 if (socket != null) {
                     socket.BeginSend(_packet.ToArray(), _packet.Length(), null, null);
                 }
             } catch (Exception _ex) {
                 Debug.Log($"Error sending data to server via UDP: {_ex}");
+                Disconnect();
             }
         }
 
@@ -231,6 +235,11 @@ public class Client : MonoBehaviour {
         if (_ip != null) {
             instance.ip = _ip;
         }
+        // Hey future 2022 Aug 2nd Chris here taking notes for SNL package rewrite of this horrible code :)
+        // You didn't fuckin Close the UDP socket bro
+        // Ur past Chris I'm allowed to make fun of you
+        // Btw hey there future 2022+ Chris, I know I'm a giant fucking idiot but i'm trying! "Do or do not" lol
+        udp = null;
         udp = new UDP();
     }
 
@@ -239,8 +248,12 @@ public class Client : MonoBehaviour {
             InitializeClientData();
 
             tcp.Connect();
+            if (udp == null) {
+                udp = new UDP();
+            }
 
             isConnected = true;
+            Debug.Log("Connected to Server of IP: " + ip);
         }
     }
 
@@ -256,12 +269,24 @@ public class Client : MonoBehaviour {
         Debug.Log("Initializing Packets...");
     }
 
-    private void Disconnect() {
+    public void Disconnect() {
         if (isConnected) {
-            isConnected = false;
             tcp.socket.Close();
-            udp.socket.Close();
 
+            try {
+                udp.socket.Close();
+            } catch {
+
+            }
+            udp = null;
+
+            NetworkManager.instance.ResetClientObjects();
+            NetworkManager.instance.ResetCallbacks();
+
+            isConnected = false;
+
+            NetworkManager.instance.CallDisconnectedFromServerCallbacks();
+    
             Debug.Log("Disconnected from server.");
         }
     }

@@ -8,6 +8,7 @@ public class ServerSend {
         _packet.WriteLength();
         Server.clients[_toClient].tcp.SendData(_packet);
     }
+
     private static void SendTCPDataToAll(Packet _packet) {
         _packet.WriteLength();
         for (int i = 1; i < Server.MaxClients; i++) {
@@ -51,6 +52,7 @@ public class ServerSend {
         using (Packet _packet = new Packet((int)ServerPackets.welcome)) { // Using creates a new objects then destroys it
             _packet.Write(_msg);
             _packet.Write(_toClient);
+            _packet.Write(Server.MaxClients);
 
             SendTCPData(_toClient, _packet);
         }
@@ -73,10 +75,10 @@ public class ServerSend {
     }
 
     // Send New Client Object
-    public static void ClientObjectNew(int _toClient, int _prefabIndex) {
+    public static void ClientObjectNew(int _toClient, int _prefabIndex, int _objectID) {
         using (Packet _packet = new Packet((int)ServerPackets.clientObjectNew)) { // Using creates a new objects then destroys it
-            // Prefab index in Client
-            _packet.Write(_prefabIndex);
+            _packet.Write(_prefabIndex); // Write prefab index in Client
+            _packet.Write(_objectID); // Write object id to packet
 
             // if id of client to send to is lower than 1, send to all clients
             if (_toClient < 0) {

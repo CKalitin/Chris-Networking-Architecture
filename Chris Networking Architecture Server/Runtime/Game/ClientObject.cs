@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ClientObject : MonoBehaviour {
     public int prefabIndex;
-    [Space]
-    public int objectId;
+    [HideInInspector] public int objectId;
 
     Vector3 previousPos;
     Quaternion previousRot;

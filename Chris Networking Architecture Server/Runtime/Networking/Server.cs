@@ -7,7 +7,6 @@ using System.Linq;
 using UnityEngine;
 
 public class Server {
-
     #region Variables
 
     public static int MaxClients { get; private set; }

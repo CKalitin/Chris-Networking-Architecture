@@ -69,7 +69,7 @@ public class Client {
             try {
                 int _byteLength = stream.EndRead(_result);
                 if (_byteLength <= 0) {
-                    Server.clients[id].Disconnect();
+                    Server.clients[id].Disconnect(id);
                     return;
                 }
 
@@ -80,7 +80,7 @@ public class Client {
                 stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
             } catch (Exception _ex) {
                 Debug.Log($"Error recieving TCP data: {_ex}");
-                Server.clients[id].Disconnect();
+                Server.clients[id].Disconnect(id);
             }
         }
 
@@ -166,16 +166,13 @@ public class Client {
         }
     }
 
-    public void Disconnect() {
+    public void Disconnect(int _clientId) {
         Debug.Log($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
 
         isConnected = false;
 
         ThreadManager.ExecuteOnMainThread(() => {
-            /*if (player != null) {
-                UnityEngine.Object.Destroy(player.transform.parent.gameObject);
-                player = null;
-            }*/
+            NetworkManager.instance.CallClientDisconnectedCallbacks(_clientId);
         });
 
         tcp.Disconnect();
