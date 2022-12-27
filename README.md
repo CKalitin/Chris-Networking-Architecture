@@ -5,3 +5,6 @@ On GitHub new versions will be published, smaller changes will stay privatly in 
 I should really rename this to Simple Networking Layer (SNL). Gotta love those hilarious initialisms.
 
 See the documentation in the GitHub repo: https://github.com/CKalitin/Chris-Networking-Architecture
+
+Made Version 2: https://github.com/CKalitin/Unity-Simple-Networking-Layer
+Maybe 2 more versions are needed for something good.
